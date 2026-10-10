@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One dish. Lk — Taste of Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;800&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#e0782f;
+    --primary-dark:#b85a1d;
+    --bg:#fffaf4;
+    --ink:#2b2118;
+    --card:#ffffff;
+    --radius:18px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+  body{background:var(--bg);color:var(--ink);}
+  h1,h2,h3,.brand{font-family:'Playfair Display',serif;}
+
+  /* ---------- NAV ---------- */
+  nav{position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+      padding:14px 5%;background:rgba(255,250,244,.92);backdrop-filter:blur(10px);
+      box-shadow:0 2px 14px rgba(0,0,0,.07);}
+  .brand{font-size:1.5rem;font-weight:800;color:var(--primary);cursor:pointer;}
+  .nav-links{display:flex;gap:22px;align-items:center;}
+  .nav-links a{text-decoration:none;color:var(--ink);font-weight:500;font-size:.95rem;cursor:pointer;transition:.2s;}
+  .nav-links a:hover{color:var(--primary);}
+  .btn{border:none;cursor:pointer;border-radius:50px;padding:10px 22px;font-weight:600;font-size:.9rem;
+       transition:.25s;box-shadow:0 4px 14px rgba(0,0,0,.12);}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px);}
+  .btn-ghost{background:#fff;color:var(--primary);border:2px solid var(--primary);}
+  .icon-btn{background:#fff;border:1.5px solid #e8dccd;border-radius:50%;width:42px;height:42px;
+            font-size:1.1rem;cursor:pointer;transition:.2s;}
+  .icon-btn:hover{border-color:var(--primary);color:var(--primary);transform:rotate(25deg);}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:78vh;display:flex;align-items:center;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;
+           filter:brightness(.55) saturate(1.1);transition:background-image .4s;}
+  .hero-inner{position:relative;z-index:2;padding:0 7%;color:#fff;max-width:720px;}
+  .hero-inner .kicker{letter-spacing:3px;text-transform:uppercase;font-size:.8rem;opacity:.85;font-weight:600;}
+  .hero-inner h1{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1.08;margin:14px 0;}
+  .hero-inner p{font-size:1.05rem;opacity:.9;margin-bottom:28px;font-weight:300;}
+  .hero-badge{position:absolute;right:5%;bottom:8%;z-index:2;background:rgba(255,255,255,.14);
+              backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);color:#fff;
+              border-radius:var(--radius);padding:14px 22px;font-size:.9rem;}
+  .hero-badge b{font-size:1.4rem;display:block;}
+
+  /* ---------- SECTIONS ---------- */
+  section{padding:64px 6%;}
+  .sec-head{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:14px;margin-bottom:34px;}
+  .sec-head h2{font-size:2rem;}
+  .sec-head span{color:var(--primary);font-weight:600;}
+
+  /* ---------- DISH GRID ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:26px;}
+  .dish{background:var(--card);border-radius:var(--radius);overflow:hidden;cursor:pointer;
+        box-shadow:0 6px 22px rgba(43,33,24,.08);transition:.3s;position:relative;}
+  .dish:hover{transform:translateY(-6px);box-shadow:0 14px 34px rgba(43,33,24,.15);}
+  .dish img{width:100%;height:180px;object-fit:cover;display:block;}
+  .dish .body{padding:16px 18px 20px;}
+  .dish h3{font-size:1.2rem;margin-bottom:4px;}
+  .dish .price{color:var(--primary);font-weight:700;font-size:1.05rem;}
+  .dish .desc{font-size:.85rem;color:#6d6155;margin-top:6px;display:-webkit-box;
+              -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .dish .meta{display:flex;gap:12px;margin-top:10px;font-size:.78rem;color:#9a8c7d;}
+  .dish .del{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.55);color:#fff;border:none;
+             border-radius:50%;width:30px;height:30px;cursor:pointer;opacity:0;transition:.2s;font-size:.85rem;}
+  .dish:hover .del{opacity:1;}
+  .dish .del:hover{background:#d33;}
+
+  /* ---------- SUPPORT / MONEY ---------- */
+  .support-wrap{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:stretch;}
+  @media(max-width:800px){.support-wrap{grid-template-columns:1fr;}}
+  .panel{background:var(--card);border-radius:var(--radius);padding:30px;box-shadow:0 6px 22px rgba(43,33,24,.08);}
+  .balance{font-family:'Playfair Display',serif;font-size:3rem;color:var(--primary);font-weight:800;}
+  .amount-row{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0;}
+  .chip{border:1.5px solid #e8dccd;background:#fff;border-radius:50px;padding:8px 18px;cursor:pointer;font-weight:600;transition:.2s;}
+  .chip.sel,.chip:hover{background:var(--primary);color:#fff;border-color:var(--primary);}
+  .support-wrap input[type=number],.support-wrap input[type=text]{width:100%;padding:12px 14px;border-radius:12px;
+      border:1.5px solid #e8dccd;font-size:.95rem;margin-bottom:12px;outline:none;}
+  .support-wrap input:focus{border-color:var(--primary);}
+  .txn{max-height:260px;overflow:auto;margin-top:14px;}
+  .txn li{display:flex;justify-content:space-between;padding:10px 4px;border-bottom:1px dashed #eee;font-size:.88rem;list-style:none;}
+  .txn li b{color:var(--primary);}
+
+  /* ---------- MODAL ---------- */
+  .modal-bg{position:fixed;inset:0;background:rgba(20,14,8,.6);display:none;align-items:center;
+            justify-content:center;z-index:100;padding:20px;}
+  .modal-bg.open{display:flex;}
+  .modal{background:#fff;border-radius:var(--radius);max-width:560px;width:100%;max-height:88vh;
+         overflow:auto;padding:26px;position:relative;animation:pop .25s ease;}
+  @keyframes pop{from{transform:scale(.94);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .modal .close{position:absolute;top:14px;right:14px;border:none;background:#f4ece1;border-radius:50%;
+                width:34px;height:34px;cursor:pointer;font-size:1rem;}
+  .modal img{width:100%;border-radius:12px;max-height:280px;object-fit:cover;}
+  .modal textarea{width:100%;border:1.5px solid #e8dccd;border-radius:12px;padding:12px;
+                  font-family:inherit;min-height:80px;margin-top:10px;outline:none;resize:vertical;}
+  .modal textarea:focus{border-color:var(--primary);}
+  .comment{display:flex;gap:10px;padding:12px 0;border-bottom:1px solid #f1e9dd;}
+  .avatar{width:38px;height:38px;border-radius:50%;background:var(--primary);color:#fff;flex-shrink:0;
+          display:flex;align-items:center;justify-content:center;font-weight:700;}
+  .comment .c-name{font-weight:600;font-size:.88rem;}
+  .comment .c-time{font-size:.72rem;color:#a99b8a;}
+  .comment p{font-size:.88rem;color:#55483a;}
+
+  /* ---------- FORMS ---------- */
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:.82rem;font-weight:600;margin-bottom:6px;color:#7a6c5c;}
+  .field input,.field textarea,.field select{width:100%;padding:11px 14px;border-radius:12px;
+      border:1.5px solid #e8dccd;font-size:.92rem;outline:none;font-family:inherit;}
+  .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--primary);}
+  .drop{border:2px dashed #d9cbb8;border-radius:12px;padding:22px;text-align:center;cursor:pointer;
+        color:#a08d78;font-size:.88rem;transition:.2s;}
+  .drop:hover{border-color:var(--primary);color:var(--primary);}
+  .drop img{max-width:100%;max-height:160px;border-radius:10px;margin-top:10px;}
+
+  /* ---------- SETTINGS DRAWER ---------- */
+  .drawer{position:fixed;top:0;right:-420px;width:400px;max-width:92vw;height:100vh;background:#fff;
+          z-index:200;box-shadow:-8px 0 30px rgba(0,0,0,.18);padding:26px;overflow:auto;transition:right .35s ease;}
+  .drawer.open{right:0;}
+  .drawer h2{margin-bottom:18px;font-size:1.5rem;}
+  .swatch{display:inline-block;width:26px;height:26px;border-radius:50%;cursor:pointer;margin:4px;
+          border:3px solid transparent;transition:.2s;}
+  .swatch.sel{border-color:#2b2118;transform:scale(1.15);}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:150;display:none;}
+  .overlay.open{display:block;}
+  .danger{background:#fdecea;color:#c0392b;border:1.5px solid #f5b7b1;width:100%;padding:11px;
+          border-radius:12px;font-weight:600;cursor:pointer;margin-top:18px;}
+  .hint{font-size:.75rem;color:#a99b8a;margin-top:4px;}
+
+  footer{background:var(--ink);color:#cbbfae;text-align:center;padding:30px 6%;font-size:.85rem;}
+  footer b{color:var(--primary);}
+  .empty{text-align:center;color:#a99b8a;padding:40px 0;font-size:.9rem;}
+  .toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--ink);
+         color:#fff;padding:12px 26px;border-radius:50px;font-size:.88rem;z-index:300;transition:.35s;opacity:0;}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<nav>
+  <div class="brand" id="brandName" onclick="scrollTo({top:0,behavior:'smooth'})">One dish. Lk</div>
+  <div class="nav-links">
+    <a onclick="go('dishes')">Dishes</a>
+    <a onclick="go('support')">Support</a>
+    <button class="btn btn-primary" onclick="openAdd()">+ Add Dish</button>
+    <button class="icon-btn" title="Customize" onclick="openSettings()">⚙️</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-inner">
+    <div class="kicker" id="heroKicker">Homemade • Fresh • Sri Lankan</div>
+    <h1 id="heroTitle">One dish. Lk</h1>
+    <p id="heroSub">Discover delicious home-cooked dishes, share your favourites, and support the cooks you love.</p>
+    <button class="btn btn-primary" onclick="go('dishes')">Explore Dishes 🍛</button>
+    <button class="btn btn-ghost" style="margin-left:10px" onclick="go('support')">Tip a Cook 💛</button>
+  </div>
+  <div class="hero-badge">Total tips collected<b id="heroBalance">Rs 0</b></div>
+</header>
+
+<!-- DISHES -->
+<section id="dishes">
+  <div class="sec-head">
+    <div><span>Fresh from the kitchen</span><h2>Today's Dishes</h2></div>
+    <button class="btn btn-ghost" onclick="openAdd()">+ Add your dish</button>
+  </div>
+  <div class="grid" id="dishGrid"></div>
+  <div class="empty" id="dishEmpty">No dishes yet — click “+ Add your dish” to post your first one!</div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support" style="background:#f6ecdf;">
+  <div class="sec-head"><div><span>Show some love</span><h2>Support &amp; Tips 💛</h2></div></div>
+  <div class="support-wrap">
+    <div class="panel" style="text-align:center;">
+      <p style="color:#7a6c5c;font-weight:600;">Total tips received</p>
+      <div class="balance" id="bigBalance">Rs 0</div>
+      <p class="hint">Every tip helps a home cook keep cooking. Thank you! 🙏</p>
+      <button class="btn btn-ghost" style="margin-top:14px" onclick="openSettings()">Change currency ⚙️</button>
+    </div>
+    <div class="panel">
+      <h3 style="margin-bottom:6px;">Add money</h3>
+      <p class="hint">Choose an amount or type your own.</p>
+      <div class="amount-row" id="chipRow"></div>
+      <input type="number" id="customAmt" placeholder="Your own amount" min="1">
+      <input type="text" id="donorName" placeholder="Your name (optional)">
+      <button class="btn btn-primary" style="width:100%" onclick="addMoney()">Add Tip 💛</button>
+      <ul class="txn" id="txnList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ADD DISH MODAL -->
+<div class="modal-bg" id="addModal">
+  <div class="modal">
+    <button class="close" onclick="closeModal('addModal')">✕</button>
+    <h2 style="margin-bottom:16px;">Add a new dish 🍲</h2>
+    <div class="field"><label>Dish name *</label><input id="dishName" placeholder="e.g. Chicken Kottu"></div>
+    <div class="field"><label>Description</label><textarea id="dishDesc" rows="2" placeholder="What's special about it?"></textarea></div>
+    <div class="field"><label>Price (<span class="curSym">Rs</span>)</label><input id="dishPrice" type="number" min="0" placeholder="e.g. 450"></div>
+    <div class="field"><label>Picture</label>
+      <div class="drop" id="dishDrop" onclick="document.getElementById('dishImg').click()">
+        📷 Click to upload a picture
+        <input type="file" id="dishImg" accept="image/*" hidden onchange="previewImg(this,'dishPreview')">
+        <div id="dishPreview"></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="width:100%" onclick="saveDish()">Publish Dish ✅</button>
+  </div>
+</div>
+
+<!-- DISH DETAIL MODAL -->
+<div class="modal-bg" id="viewModal">
+  <div class="modal" id="viewModalBody"></div>
+</div>
+
+<!-- SETTINGS DRAWER -->
+<div class="overlay" id="overlay" onclick="closeSettings()"></div>
+<div class="drawer" id="drawer">
+  <button class="close" style="border:none;background:#f4ece1;border-radius:50%;width:34px;height:34px;cursor:pointer;float:right" onclick="closeSettings()">✕</button>
+  <h2>Customize your site ⚙️</h2>
+
+  <div class="field"><label>Website name</label><input id="setName"></div>
+  <div class="field"><label>Hero headline</label><input id="setTitle"></div>
+  <div class="field"><label>Hero subtitle</label><textarea id="setSub" rows="2"></textarea></div>
+  <div class="field"><label>Kicker line</label><input id="setKicker"></div>
+  <div class="field"><label>Currency</label>
+    <select id="setCur">
+      <option value="Rs">Rs (LKR)</option><option value="$">$ (USD)</option>
+      <option value="€">€ (EUR)</option><option value="£">£ (GBP)</option><option value="₹">₹ (INR)</option>
+    </select>
+  </div>
+  <div class="field"><label>Theme colour</label><div id="swatches"></div></div>
+  <div class="field"><label>Front cover picture</label>
+    <div class="drop" onclick="document.getElementById('heroImgFile').click()">
+      🖼️ Click to change front cover
+      <input type="file" id="heroImgFile" accept="image/*" hidden onchange="setHeroImg(this)">
+    </div>
+    <p class="hint">Use your own photo as the front cover here.</p>
+  </div>
+  <button class="btn btn-primary" style="width:100%" onclick="saveSettings()">Save Changes 💾</button>
+  <button class="danger" onclick="resetAll()">Reset everything to default</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>Made with 💛 by <b id="footName">One dish. Lk</b> — share food, share love.</footer>
+
+<script>
+const LS = { set:(k,v)=>localStorage.setItem('onedish_'+k,JSON.stringify(v)),
+             get:(k,d)=>{const v=localStorage.getItem('onedish_'+k);return v?JSON.parse(v):d;} };
+
+const DEFAULTS = {
+  name:'One dish. Lk', title:'One dish. Lk',
+  kicker:'Homemade • Fresh • Sri Lankan',
+  sub:'Discover delicious home-cooked dishes, share your favourites, and support the cooks you love.',
+  cur:'Rs', color:'#e0782f', hero: null
+};
+
+let settings = Object.assign({}, DEFAULTS, LS.get('settings', {}));
+let dishes   = LS.get('dishes', []);
+let txns     = LS.get('txns', []);
+let comments = LS.get('comments', {});
+let selAmt = 100, tmpDishImg = null;
+
+const fmt = n => settings.cur + ' ' + Number(n||0).toLocaleString();
+const $ = id => document.getElementById(id);
+const go = id => document.getElementById(id).scrollIntoView({behavior:'smooth'});
+
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200); }
+
+/* ---------- APPLY SETTINGS ---------- */
+function applySettings(){
+  document.documentElement.style.setProperty('--primary', settings.color);
+  document.documentElement.style.setProperty('--primary-dark', shade(settings.color,-25));
+  $('brandName').textContent = settings.name;
+  document.title = settings.name + ' — Taste of Home';
+  $('heroTitle').textContent = settings.title;
+  $('heroSub').textContent = settings.sub;
+  $('heroKicker').textContent = settings.kicker;
+  $('footName').textContent = settings.name;
+  document.querySelectorAll('.curSym').forEach(e=>e.textContent=settings.cur);
+  $('heroBg').style.backgroundImage = settings.hero
+    ? `url(${settings.hero})`
+    : 'linear-gradient(135deg,#e0782f,#a0451a), url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80")';
+  if(!settings.hero) $('heroBg').style.background = 'url("https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&q=80") center/cover';
+  renderDishes(); renderBalance(); renderTxns(); buildChips();
+}
+function shade(hex,p){const n=parseInt(hex.slice(1),16),a=Math.round(2.55*p);
+  return '#'+(0x1000000+(Math.min(255,Math.max(0,(n>>16)+a))<<16)+(Math.min(255,Math.max(0,((n>>8)&255)+a))<<8)+Math.min(255,Math.max(0,(n&255)+a))).toString(16).slice(1);}
+
+/* ---------- DISHES ---------- */
+function renderDishes(){
+  const g=$('dishGrid'); g.innerHTML='';
+  $('dishEmpty').style.display = dishes.length?'none':'block';
+  dishes.forEach(d=>{
+    const c = (comments[d.id]||[]).length;
+    g.innerHTML += `<div class="dish" onclick="openDish(${d.id})">
+      <button class="del" onclick="event.stopPropagation();delDish(${d.id})">✕</button>
+      <img src="${d.img||'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80'}" alt="">
+      <div class="body">
+        <h3>${esc(d.name)}</h3>
+        <div class="price">${d.price?fmt(d.price):'—'}</div>
+        <div class="desc">${esc(d.desc||'')}</div>
+        <div class="meta">💬 ${c} comment${c===1?'':'s'} • 🕒 ${d.when}</div>
+      </div></div>`;
+  });
+}
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));}
+
+function openAdd(){ $('addModal').classList.add('open'); }
+function closeModal(id){ $(id).classList.remove('open'); }
+document.querySelectorAll('.modal-bg').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+function previewImg(input, boxId){
+  const f=input.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{ tmpDishImg=e.target.result; $(boxId).innerHTML=`<img src="${tmpDishImg}">`; };
+  r.readAsDataURL(f);
+}
+function saveDish(){
+  const name=$('dishName').value.trim();
+  if(!name){toast('Please give the dish a name ✍️');return;}
+  dishes.unshift({ id:Date.now(), name, desc:$('dishDesc').value.trim(),
+    price:$('dishPrice').value||'', img:tmpDishImg,
+    when:new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}) });
+  LS.set('dishes',dishes);
+  $('dishName').value='';$('dishDesc').value='';$('dishPrice').value='';tmpDishImg=null;$('dishPreview').innerHTML='';
+  closeModal('addModal'); renderDishes(); toast('Dish published! 🎉');
+}
+function delDish(id){
+  if(!confirm('Delete this dish?'))return;
+  dishes=dishes.filter(d=>d.id!==id); delete comments[id];
+  LS.set('dishes',dishes); LS.set('comments',comments); renderDishes(); toast('Dish deleted');
+}
+
+/* ---------- DISH VIEW + COMMENTS ---------- */
+let curDish=null;
+function openDish(id){
+  curDish=id;
+  const d=dishes.find(x=>x.id===id); if(!d)return;
+  const list=comments[id]||[];
+  $('viewModalBody').innerHTML=`
+    <button class="close" onclick="closeModal('viewModal')">✕</button>
+    <img src="${d.img||'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&q=80'}">
+    <h2 style="margin-top:14px">${esc(d.name)} ${d.price?`<span style="color:var(--primary)">${fmt(d.price)}</span>`:''}</h2>
+    <p style="color:#6d6155;margin:6px 0 4px">${esc(d.desc||'')}</p>
+    <h3 style="margin-top:18px">Comments (${list.length}) 💬</h3>
+    <div id="cList">${list.map(c=>commentHTML(c)).join('')||'<p class="hint">No comments yet — be the first!</p>'}</div>
+    <input id="cName" placeholder="Your name" style="width:100%;padding:11px 14px;border-radius:12px;border:1.5px solid #e8dccd;margin-top:12px;outline:none">
+    <textarea id="cText" placeholder="Write a comment..."></textarea>
+    <button class="btn btn-primary" style="width:100%" onclick="postComment()">Post Comment 💬</button>`;
+  $('viewModal').classList.add('open');
+}
+function commentHTML(c){
+  return `<div class="comment"><div class="avatar">${esc(c.name[0]||'?').toUpperCase()}</div>
+    <div><div class="c-name">${esc(c.name)} <span class="c-time">• ${c.when}</span></div><p>${esc(c.text)}</p></div></div>`;
+}
+function postComment(){
+  const name=$('cName').value.trim()||'Anonymous';
+  const text=$('cText').value.trim();
+  if(!text){toast('Write something first ✍️');return;}
+  (comments[curDish]=comments[curDish]||[]).push({name,text,
+    when:new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})});
+  LS.set('comments',comments);
+  openDish(curDish); renderDishes(); toast('Comment posted! 💬');
+}
+
+/* ---------- MONEY ---------- */
+function buildChips(){
+  $('chipRow').innerHTML=[100,250,500,1000].map(a=>
+    `<div class="chip ${a===selAmt?'sel':''}" onclick="selAmt=${a};buildChips()">${fmt(a)}</div>`).join('');
+}
+function addMoney(){
+  const amt = parseFloat($('customAmt').value) || selAmt;
+  if(amt<=0){toast('Enter a valid amount');return;}
+  const donor=$('donorName').value.trim()||'Anonymous supporter';
+  txns.unshift({donor, amt, when:new Date().toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})});
+  LS.set('txns',txns);
+  $('customAmt').value='';$('donorName').value='';
+  renderBalance(); renderTxns(); toast('Thank you for the tip! 💛');
+}
+function renderBalance(){
+  const total=txns.reduce((s,t)=>s+t.amt,0);
+  $('bigBalance').textContent=fmt(total);
+  $('heroBalance').textContent=fmt(total);
+}
+function renderTxns(){
+  $('txnList').innerHTML = txns.map(t=>
+    `<li><span>💛 ${esc(t.donor)}<br><span class="hint">${t.when}</span></span><b>+${fmt(t.amt)}</b></li>`).join('')
+    || '<li class="hint">No tips yet.</li>';
+}
+
+/* ---------- SETTINGS ---------- */
+function openSettings(){
+  $('setName').value=settings.name; $('setTitle').value=settings.title;
+  $('setSub').value=settings.sub; $('setKicker').value=settings.kicker;
+  $('setCur').value=settings.cur;
+  $('swatches').innerHTML=['#e0782f','#c0392b','#2e7d32','#1565c0','#6a1b9a','#ad1457','#00838f','#5d4037']
+    .map(c=>`<span class="swatch ${c===settings.color?'sel':''}" style="background:${c}" onclick="pickColor('${c}',this)"></span>`).join('');
+  $('drawer').classList.add('open'); $('overlay').classList.add('open');
+}
+function closeSettings(){ $('drawer').classList.remove('open'); $('overlay').classList.remove('open'); }
+function pickColor(c,el){ settings.color=c; $('swatches').querySelectorAll('.swatch').forEach(s=>s.classList.remove('sel')); el.classList.add('sel'); }
+function setHeroImg(input){
+  const f=input.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{ settings.hero=e.target.result; LS.set('settings',settings);
+    applySettings(); toast('Front cover updated! 🖼️'); };
+  r.readAsDataURL(f);
+}
+function saveSettings(){
+  settings.name=$('setName').value.trim()||DEFAULTS.name;
+  settings.title=$('setTitle').value.trim()||settings.name;
+  settings.sub=$('setSub').value.trim()||DEFAULTS.sub;
+  settings.kicker=$('setKicker').value.trim()||DEFAULTS.kicker;
+  settings.cur=$('setCur').value;
+  LS.set('settings',settings); applySettings(); closeSettings(); toast('Saved! Your site is updated 💾');
+}
+function resetAll(){
+  if(!confirm('Reset ALL content (dishes, comments, tips, settings)?'))return;
+  Object.keys(localStorage).filter(k=>k.startsWith('onedish_')).forEach(k=>localStorage.removeItem(k));
+  settings=Object.assign({},DEFAULTS); dishes=[]; txns=[]; comments={};
+  applySettings(); closeSettings(); toast('Everything reset to default');
+}
+
+/* ---------- SEED SAMPLE DISH (first visit only) ---------- */
+if(!LS.get('seeded',false) && dishes.length===0){
+  dishes=[
+    {id:1,name:'Chicken Kottu',desc:'Sri Lankan street-style chopped roti with chicken, egg & spices.',price:'450',img:'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80',when:'Today'},
+    {id:2,name:'Egg Hopper',desc:'Crispy-edged bowl hopper with a soft egg centre. Perfect for breakfast.',price:'150',img:'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80',when:'Today'},
+    {id:3,name:'Watalappan',desc:'Creamy jaggery coconut custard with cashew — a classic dessert.',price:'250',img:'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=600&q=80',when:'Yesterday'}
+  ];
+  comments={1:[{name:'Nimal',text:'Best kottu I have had in ages! 🔥',when:'2 hours ago'}]};
+  txns=[{donor:'Kamala',amt:500,when:'Yesterday, 8:15 pm'}];
+  LS.set('seeded',true); LS.set('dishes',dishes); LS.set('comments',comments); LS.set('txns',txns);
+}
+
+applySettings();
+</script>
+</body>
+</html>
